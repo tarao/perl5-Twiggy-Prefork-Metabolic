@@ -6,5 +6,6 @@ on 'test' => sub {
     requires 'Plack';
     requires 'LWP::UserAgent';
     requires 'AnyEvent::HTTP';
+    requires 'HTTP::Headers';
     requires 'List::MoreUtils';
 };

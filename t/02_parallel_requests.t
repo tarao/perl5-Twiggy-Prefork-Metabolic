@@ -8,6 +8,7 @@ use LWP::UserAgent;
 use List::MoreUtils qw(any);
 use AnyEvent;
 use AnyEvent::HTTP qw(http_get);
+use HTTP::Headers;
 
 my $max_workers = 1;
 my $max_reqs_per_child = 5;
@@ -58,13 +59,15 @@ test_tcp
             $cv->begin;
             http_get $url, sub {
                 my ($body, $headers) = @_;
+                $headers = HTTP::Headers->new(%$headers);
 
                 $res{$body} ||= 1;
-                my $reqs_per_child = $headers->{'x-requests-per-child'};
+                my $reqs_per_child = $headers->header('x-requests-per-child');
                 if ($res{$body} < $reqs_per_child) {
                     $res{$body} = $reqs_per_child;
                 }
-                push @code, $headers->{Status} if $headers->{Status} == 200;
+                my $status = $headers->header('status');
+                push @code, $status if $status == 200;
 
                 $cv->end;
             };
