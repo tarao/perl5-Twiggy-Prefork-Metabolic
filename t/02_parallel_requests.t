@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More;
+use Test::More tests => 2;
 use Test::TCP;
 use Plack::Runner;
 use Plack::Request;
@@ -90,5 +90,3 @@ test_tcp
         $runner->run($app);
         exit;
     };
-
-done_testing();
